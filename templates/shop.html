@@ -1,0 +1,165 @@
+{% extends 'base2.html' %}
+{% block s_active %} active {% endblock s_active %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" />
+{% block style %}
+    <style>
+    .dataTables_wrapper .dataTables_paginate .pagination {
+  justify-content: flex-end;
+}
+     .dataTables_wrapper .dataTables_filter {
+    text-align: right;
+    margin-bottom: 10px;
+  }
+     .pac-container {
+  z-index: 9999 !important;
+}
+     .bootstrap-tagsinput {
+  width: 100%;
+}
+
+.badge {
+  margin-right: 5px;
+}
+    </style>
+{% endblock %}
+    {% load crispy_forms_tags %}
+{% block main %}
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+    {% include 'message.html' %}
+    {% if user.is_superuser %}
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createshop"> Create a new Raspberry </button>
+    {% endif %}
+     
+     {% if shops %}
+      <h4 class="mt-4">All Raspberry</h4>
+        <table id="shopList" class="table table-striped" style="width:100%">
+          <thead>
+            <tr>
+              <th scope="col">Sl</th>
+              <th scope="col">Shop Name</th>
+              <th scope="col">Owner Name</th>
+              <th scope="col">Status</th>
+              <th scope="col">Location</th>
+              <th scope="col">View</th>
+              <th scope="col">Update</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+    
+            {% for shop in shops %}    
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ shop.name }}</td>
+              <td>{{ shop.owner.get_full_name }}</td>
+              <td>
+                 {% if shop.is_verified == True %}
+                <p class=" text-success"> Active  </p>
+                {% else %}
+                <p class=" text-danger"> False </p>
+                {% endif %}
+
+              </td>
+              <td>{{ shop.location }}</td>
+              <td>
+                <a href="{% url 'coreapp:view_shop' shop.id %}" class="btn btn-sm btn-primary">View</a>
+                  <a target="_blank" href="{% url 'coreapp:view_shop_slider' shop.id %}" class="btn btn-sm btn-secondary mt-1">Slider</a>
+              </td>
+              <td>
+                <a href="{% url 'coreapp:edit_shop' shop.id %}" class="btn btn-sm btn-warning">Update</a>
+              </td>
+              <td>
+                <button data-toggle="modal" data-target="#deleteshop" onclick="setShopId({{shop.id}})" class="btn btn-sm btn-danger">Delete</button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </main>
+
+{% comment %} Shop create modal {% endcomment %}
+    <div class="modal fade" id="createshop" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Create Location</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form method="post" enctype="multipart/form-data">
+          <div class="modal-body">
+                 {% csrf_token %}
+               {{ form|crispy }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button name="shop_form" type="submit" class="btn btn-primary">Create Shop</button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+{% comment %} Shop delete modal  {% endcomment %}
+<div class="modal fade" id="deleteshop" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete Shop</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="post" enctype="multipart/form-data" id="delete_shop_form">
+        {% csrf_token %}
+        <div class="modal-body">
+          <p>Are you sure you want to delete this shop?</p>
+          <input type="hidden" name="shop_id" id="shop-id-input">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button name="delete_shop_form" type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvipoA5dBlxWXuXctizbINF1YYuWUzvBQ&libraries=places"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+    <script>
+ $('#shopList').DataTable({
+     "ordering": true,
+ });
+ $('input[name="tags"]').tagsinput({
+    confirmKeys: [13, 44], // Enter and comma keys
+    trimValue: true,
+    tagClass: 'badge bg-primary',
+    maxChars: 10});
+  function setShopId(shopId) {
+    document.getElementById('shop-id-input').value = shopId;
+  }
+
+   var autocomplete = new google.maps.places.Autocomplete(document.getElementById('id_location'));
+      autocomplete.addListener('place_changed', function() {
+        var place = autocomplete.getPlace();
+        var predictions = place.predictions;
+        var suggestionsList = document.getElementById('location-suggestions');
+        suggestionsList.innerHTML = '';
+        predictions.forEach(function(prediction) {
+          var option = document.createElement('option');
+          option.value = prediction.description;
+          suggestionsList.appendChild(option);
+        });
+      });
+  </script>
+
+
+{% endblock main %}
+

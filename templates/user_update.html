@@ -1,0 +1,36 @@
+{% extends 'base2.html' %}
+
+{% block s_active %} active {% endblock s_active %}
+
+{% block main %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+          <!-- <div class="card-header">Edit Shop</div> -->
+          <div class="card-body">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="form-group mt-3">
+                <label for="name">User Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{user.get_full_name}}">
+              </div>
+  
+              <div class="form-group mt-3">
+                <label for="user">Status</label>
+                <select id="user" name="status" class="form-control">
+                    <option selected="selected" value="{{Status}}">{{Status}}</option>
+                    <option value="Varify">Varify</option>
+                    <option value="Deny">Deny</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-sm btn-primary mt-3">Update Shop</button>
+            </form>
+          </div>
+      </div>
+    </div>
+  </main>
+
+
+{% endblock %}

@@ -1,0 +1,56 @@
+
+Table Users {
+  id integer [primary key]
+  username varchar
+  email email
+  created_at timestamp
+}
+
+Table Membership{
+  id integer [primary key]
+  plan_name varchar
+  valid_to timestamp
+  current_price integer
+  active bool
+}
+
+Table Payment {
+  id integer [primary key]
+  user_id integer
+  subscription_id integer
+  amount integer
+  is_success bool
+  created_at timestamp
+}
+
+Table Invoices{
+  id integer [primary key]
+  user_id integer
+  subscription_id integer
+  invoice_period_start_date timestamp
+  invoice_period_end_date timestamp
+  invoice_description text
+  invoice_amount integer
+}
+
+Table Shop{
+  id integer [primary key]
+  user_id integer
+  shop_name varchar
+  shop_description text
+  location varchar
+}
+
+
+
+Table Image{
+  id integer [primary key]
+  shop_id integer
+  category varchar
+}
+
+Table Image_Gallary{
+  id integer [primary key]
+  gallary_name varchaew
+  
+}

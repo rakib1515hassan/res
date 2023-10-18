@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  <style>
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .gallery-item {
+      margin: 10px;
+      width: 250px;
+      height: 250px;
+      overflow: hidden;
+      border: 1px solid #ccc;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.2);
+    }
+	.navbar {
+      background-color: #554c86;
+    }
+    .navbar-brand {
+      color: #FFFFFF;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+    .navbar-nav .nav-link {
+      color: #FFFFFF;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-left: 20px;
+    }
+    .navbar-nav .nav-link:hover {
+      color: #F8F9FA;
+    }
+        .pricing-content{position:relative;}
+        .pricing_design{
+            position: relative;
+            margin: 0px 15px;
+        }
+        .pricing_design .single-pricing{
+            background:#554c86;
+            padding: 60px 40px;
+            border-radius:30px;
+            box-shadow: 0 10px 40px -10px rgba(0,64,128,.2);
+            position: relative;
+            z-index: 1;
+        }
+        .pricing_design .single-pricing:before{
+            content: "";
+            background-color: #fff;
+            width: 100%;
+            height: 100%;
+            border-radius: 18px 18px 190px 18px;
+            border: 1px solid #eee;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            z-index: -1;
+        }
+        .price-head{}
+        .price-head h2 {
+            margin-bottom: 20px;
+            font-size: 26px;
+            font-weight: 600;
+        }
+        .price-head h1 {
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 5px;
+        }
+        .price-head span{}
+
+        .single-pricing ul{list-style:none;margin-top: 30px;}
+        .single-pricing ul li {
+            line-height: 36px;
+        }
+        .single-pricing ul li i {
+            background: #554c86;
+            color: #fff;
+            width: 20px;
+            height: 20px;
+            border-radius: 30px;
+            font-size: 11px;
+            text-align: center;
+            line-height: 20px;
+            margin-right: 6px;
+        }
+        .pricing-price{}
+        .price_btn {
+            background: #554c86;
+            padding: 10px 30px;
+            color: #fff;
+            display: inline-block;
+            margin-top: 20px;
+            border-radius: 2px;
+            -webkit-transition: 0.3s;
+            transition: 0.3s;
+        }
+        .price_btn:hover{background:#0aa1d6; color: #fff;}
+        a{
+        text-decoration:none;    
+        }
+
+        .section-title {
+            margin-bottom: 60px;
+        }
+        .text-center {
+            text-align: center!important;
+        }
+
+        .section-title h2 {
+            font-size: 45px;
+            font-weight: 600;
+            margin-top: 0;
+            position: relative;
+            text-transform: capitalize;
+        }
+        .header {
+      background-color: #554c86;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 36px;
+      margin-bottom: 0;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    h3 {
+      font-size: 24px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    p {
+      font-size: 18px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .gallery {
+      margin-top: 50px;
+    }
+    .gallery img {
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+    .modal-dialog {
+      max-width: 800px;
+    }
+    .modal-body img {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand" href="#">Logo</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'coreapp:home' %}">Home</a>
+              </li>
+			  <li class="nav-item">
+                <a class="nav-link" href="{% url 'coreapp:plan' %}">Plan</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'coreapp:logout' %}">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+	  {% block content %} {% endblock content %}
+  
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <!-- Popper.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

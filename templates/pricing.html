@@ -1,0 +1,136 @@
+{% extends 'base2.html' %}
+{% load static %}
+{% block plan_active %} active {% endblock plan_active %}
+{% block style %}
+<link href="{% static 'css/pricing.css' %}" rel="stylesheet">
+{% endblock style %}
+
+{% block main %}
+
+
+{% if request.user.is_superuser %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="row">
+<h4 class="mt-4">All User</h4>
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="col">Sl</th>
+        <th scope="col">User Name</th>
+        <th scope="col">Plan</th>
+        <th scope="col">Purchased</th>
+        <th scope="col">Status</th>
+        <th scope="col">View</th>
+        <th scope="col">Update</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for user in get_users %}    
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ user.user.get_full_name }}</td>
+        <td>{{ user.plan }}</td>
+        <td>{{ user.plan.created_at }}</td>
+        <td>
+          
+          
+          {% if user.is_verified == True %}
+          <p class=" text-success"> Verified  </p>
+          {% else %}
+          <p class=" text-danger"> Unverified </p>
+          {% endif %}
+            
+
+        </td>
+        <td>
+          <a href="{% url 'coreapp:user' user.user.pk %}" class="btn btn-sm btn-primary">View</a>
+        </td>
+        <td>
+          <a href="{% url 'coreapp:user_update' user.user.id %}" class="btn btn-sm btn-warning">Update</a>
+        </td>
+        <td>
+          <button data-toggle="modal" data-target="#deleteuser-{{forloop.counter}}" class="btn btn-sm btn-danger">Delete</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+</main>
+{%else%}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="card-body mt-5">
+    <div class="row text-center">
+
+      {% for plan in plans %}
+      <div class="col-md-3 mb-4 rounded-3 m-3 shadow-sm">
+          <div class="card-header py-3 text-bg-light">
+            <h4 class="my-0 fw-normal">{{ plan.name }}</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">${{plan.price}}<small class="text-body-secondary fw-light">/mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>{{plan.time_of_membership}} </li>
+            </ul>
+
+            <form action="{% url 'checkout:create_checkout_session' plan.id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="w-100 btn btn-lg btn-primary" id="checkout-button" >Subscribe</button>
+            </form>
+          
+          </div>
+      </div>
+      {% endfor %}
+
+      <!-- <div class="col-md-3 mb-4 rounded-3 shadow-sm border-primary m-3">
+          <div class="card-header py-3 text-bg-primary border-primary">
+            <h4 class="my-0 fw-normal">Standard</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$50<small class="text-body-secondary fw-light">/mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente, repellat?</li>
+            </ul>
+            <button disabled type="button" class="w-100 btn btn-lg btn-primary">Subscribed</button>
+          </div>
+      </div> -->
+
+    </div>
+  </div>
+</main>
+  
+{% endif %}
+<!---------------------- User Delete Modal --------------------->
+{% for user in get_users %}
+<div class="modal fade" id="deleteuser-{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST" action="{% url 'coreapp:user_delete' user.user.id %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <p>Are you sure you want to delete this shop?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<script>
+
+</script>
+
+{% endblock main %}

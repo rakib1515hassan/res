@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container my-5">
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <div class="card">
+          <div class="card-header">
+            Add Image
+          </div>
+          <div class="card-body">
+            <form method="post" action="{% url 'coreapp:manage_gallery' category.id %}" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="category">Gallery Name</label>
+                <input type="text" name="gallery_name" id="category" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" name="image" id="image" class="form-control-file" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Add Image</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              {% for image in images %}
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img class="card-img-top" src="{{image.image_url.url}}">
+                  <div class="card-body">
+                    <h5 class="card-title">{{image.gallery_name}}</h5>
+                    <div class="btn-group">
+                        <a href="{% url 'coreapp:delete_image_gallery' image.id %}" class="btn btn-sm btn-outline-danger" >Delete</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

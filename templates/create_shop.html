@@ -1,0 +1,44 @@
+{% extends 'base2.html' %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" />
+{% block main %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="col-md-8 offset-md-2">
+        <div class=" mt-5 mb-5">
+          <div class="card-header bg-light text-center">
+            <h5>Create a Shop</h5>
+          </div>
+          <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="name">Shop Name</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter shop name" required>
+                </div>
+                <div class="form-group">
+                  <label for="location">Location</label>
+                  <input type="text" class="form-control" id="location" name="location" placeholder="Enter shop location" required>
+                </div>
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea class="form-control" id="description" name="description" rows="5" placeholder="Enter shop description" required></textarea>
+                </div>
+                 <div class="form-group">
+               <label for="tags">Tags</label>
+             {{ form.tags }}
+          </div>
+                <button type="submit" class="btn btn-primary">Create Shop</button>
+              </form>
+          </div>
+        </div>
+      </div>
+</main>
+       <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+    <script>
+     $('input[name="tags"]').tagsinput({
+     confirmKeys: [13, 44], // Enter and comma keys
+    trimValue: true,
+    tagClass: 'badge bg-primary',
+    maxChars: 10});
+    </script>
+{% endblock %}

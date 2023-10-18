@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Image Gallery</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css"
+  <!-- Custom CSS -->
+  <style>
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .gallery-item {
+      margin: 10px;
+      width: 250px;
+      height: 250px;
+      overflow: hidden;
+      border: 1px solid #ccc;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand" href="#">Logo</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Shop</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+  <div class="container mt-5">
+    <h1 class="text-center">Shop Image Gallery</h1>
+    <div class="gallery mt-3">
+      <div class="gallery-item">
+        <a href="#">
+          <img src="https://via.placeholder.com/500x500.png?text=Image+1" alt="Image 1">
+        </a>
+      </div>
+      <div class="gallery-item">
+        <a href="#">
+          <img src="https://via.placeholder.com/500x500.png?text=Image+2" alt="Image 2">
+        </a>
+      </div>
+      <div class="gallery-item">
+        <a href="#">
+          <img src="https://via.placeholder.com/500x500.png?text=Image+3" alt="Image 3">
+        </a>
+      </div>
+      <div class="gallery-item">
+        <a href="#">
+          <img src="https://via.placeholder.com/500x500.png?text=Image+4" alt="Image 4">
+        </a>
+      </div>
+      <div class="gallery-item">
+        <a href="#">
+          <img src="https://via.placeholder.com/500x500.png?text=Image+5" alt="Image 5">
+        </a>
+      </div>
+      <div class="gallery-item">
+        <a href="#">
+          <img src="https://via.placeholder.com/500x500.png?text=Image+6" alt="Image 6">
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <!-- Popper.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

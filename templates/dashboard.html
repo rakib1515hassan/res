@@ -1,0 +1,77 @@
+{% extends 'base2.html' %}
+{% block d_active %} active {% endblock d_active %}
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvipoA5dBlxWXuXctizbINF1YYuWUzvBQ"></script>
+{% block main %}
+<style>
+#map {
+             position: relative;
+        width:100%;
+        height:450px;
+    border: 0;
+             top: 0;
+         left: 0;
+        z-index: 1;
+             overflow: visible;
+      }
+</style>
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
+  <div class="d-md-flex gap-3">
+
+    
+    {% if request.user.is_superuser %}
+    <div class="col-md-4 col-12 bg-primary rounded">
+      <div class="text-center text-white p-3">
+        <h1 class="fs-2 fw-normal text-capitalize">Total Income</h1>
+        <h2 class="fw-bolder">${{total_price}}</h2>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+  <div class="col-12">
+    <div
+      class="map-area border-primary rounded mt-4 shadow-sm"
+      style="border: 4px solid"
+    >
+        <div id="map"></div>
+    </div>
+  </div>
+</main>
+
+ <script>
+ function initMap() {
+     var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 6,
+          center: { lat: 23.6850, lng: 90.3563 }
+        });
+
+     {% for shop in shops %}
+         var locationString = "{{ shop.location }}";
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ address: locationString }, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+      var latitude = results[0].geometry.location.lat();
+      var longitude = results[0].geometry.location.lng();
+
+      var location = { lat: latitude, lng: longitude };
+      var marker = new google.maps.Marker({
+        position: location,
+        map: map,
+        title: '{{ shop.name }}'
+      });
+
+      marker.addListener('click', function() {
+        var infowindow = new google.maps.InfoWindow({
+          content: '<h3>{{ shop.name }}</h3><p>{{ shop.house_no }}</p><p>{{ shop.location }}</p><p>{{ shop.zip_code }}</p>'
+        });
+        infowindow.open(map, marker);
+      });
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+     {% endfor %}
+}
+ </script>
+     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvipoA5dBlxWXuXctizbINF1YYuWUzvBQ&callback=initMap"></script>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'base2.html' %}
+{% load static %}
+{% block plan_active %} active {% endblock plan_active %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+{% block style %}
+    <style>
+    .dataTables_wrapper .dataTables_paginate .pagination {
+  justify-content: flex-end;
+}
+     .dataTables_wrapper .dataTables_filter {
+    text-align: right;
+    margin-bottom: 10px;
+  }
+     </style>
+{% endblock style %}
+
+{% block main %}
+
+
+{% if request.user.is_superuser %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="row">
+<h4 class="mt-4">All User</h4>
+<div class="table-responsive">
+  <table class="table table-striped table-sm" id="user-list">
+    <thead>
+      <tr>
+        <th scope="col">Sl</th>
+        <th scope="col">User Name</th>
+        <th scope="col">Plan</th>
+        <th scope="col">Purchased</th>
+        <th scope="col">Status</th>
+        <th scope="col">View</th>
+        <th scope="col">Update</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for user in get_users %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ user.user.get_full_name }}</td>
+        <td>{{ user.plan }}</td>
+        <td>{{ user.plan.created_at }}</td>
+        <td>
+
+
+          {% if user.is_verified == True %}
+          <p class=" text-success"> Verified  </p>
+          {% else %}
+          <p class=" text-danger"> Unverified </p>
+          {% endif %}
+
+
+        </td>
+        <td>
+          <a href="{% url 'coreapp:user' user.user.pk %}" class="btn btn-sm btn-primary">View</a>
+        </td>
+        <td>
+          <a href="{% url 'coreapp:user_update' user.user.id %}" class="btn btn-sm btn-warning">Update</a>
+        </td>
+        <td>
+          <button data-toggle="modal" data-target="#deleteuser-{{forloop.counter}}" class="btn btn-sm btn-danger">Delete</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+</main>
+{% endif %}
+<!---------------------- User Delete Modal --------------------->
+{% for user in get_users %}
+<div class="modal fade" id="deleteuser-{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST" action="{% url 'coreapp:user_delete' user.user.id %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <p>Are you sure you want to delete this shop?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+     $('#user-list').DataTable({
+     "ordering": true,
+ });
+    </script>
+{% endblock main %}

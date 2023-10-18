@@ -1,0 +1,203 @@
+{% extends 'base2.html' %}
+{% load static %}
+{% block g_active %} active {% endblock g_active %}
+
+{% block style %}
+<style>
+
+input[type="checkbox"][id^="myCheckbox"] {
+  display: none;
+}
+
+label {
+  border: 1px solid #fff;
+  padding: 10px;
+  display: block;
+  position: relative;
+  margin: 10px;
+  cursor: pointer;
+}
+
+label:before {
+  background-color: white;
+  color: white;
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  border: 1px solid grey;
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  line-height: 28px;
+  transition-duration: 0.4s;
+  transform: scale(0);
+}
+
+label img {
+  height: 100%;
+  width: 100%;
+  transition-duration: 0.2s;
+  transform-origin: 50% 50%;
+}
+
+:checked + label {
+  border-color: #ddd;
+}
+
+:checked + label:before {
+  content: "✓";
+  background-color: grey;
+  transform: scale(1);
+}
+
+:checked + label img {
+  transform: scale(0.9);
+  /* box-shadow: 0 0 5px #333; */
+  z-index: -1;
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock style %}
+
+{% block main %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <h2 class="text-center">Add Image</h2>
+
+    <div class="mb-5"></div>
+<div class="container">
+ <form method="post" action="{% url 'coreapp:image' %}" enctype="multipart/form-data">
+ {% csrf_token %}
+    <select class="form-select" name="gallery" aria-label="Default select example" required>
+  <option value="" selected>Select gallery</option>
+        {% for gallery in galleries %}
+          <option value="{{ gallery.id }}">{{ gallery }}</option>
+        {% endfor %}
+</select>
+    <div class="row text-center text-lg-start">
+    {% for c in page_obj %}
+      <div class="col-lg-3 col-md-4 col-6 h-50">
+        <input type="checkbox" id="myCheckbox{{c.id}}" name="{{ c.id }}" value="Checked" />
+        <label for="myCheckbox{{c.id}}"  class="d-block mb-4">
+            <img class="img-fluid img-thumbnail" src="{{ c.image.url }}" style="width: 180px; height: 180px;" />
+            <p class="text-center text-success"><strong>{{c.name}}</strong></p>
+        </label>
+          <p class="float-start">{{c.gallery.gallery_name}}</p>
+        <button data-toggle="modal" data-target="#deleteContent" onclick="setContentId({{c.id}})" class="btn btn-sm btn-danger float-end">Delete</button>
+      </div>
+    {% endfor %}
+  </div>
+ <button type="submit" class="btn btn-primary float-end mt-5">Submit</button>
+ </form>
+  <!-- Pagination Start -->
+  <div style="display: flex; justify-content: center; margin-top: 40px;">
+    <nav aria-label="Page navigation example">
+      {% if page_obj.has_other_pages %}
+      <ul class="pagination">
+
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo; Previous</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"></li>
+        {% endif %}
+
+        {% for i in page_obj.paginator.page_range %}
+          {% if page_obj.number == i %}
+          <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+          {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">Next &raquo;</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"></li>
+        {% endif %}
+
+      </ul>
+      {% endif %}
+    </nav>
+  </div>
+</diV>
+  <!--- Pagination End --->
+</main>
+
+
+<!-- Image Add Modal Start -->
+<div class="modal fade" id="addImage" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Add Image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="post" action="{% url 'coreapp:add_image' %}" enctype="multipart/form-data">
+      <div class="modal-body">
+            {% csrf_token %}
+            <div class="form-group mt-3">
+              <label for="image_name">Image Name</label>
+              <input type="text" name="image_name" class="form-control" required>
+            </div>
+
+            <div class="form-group mt-3">
+              <label for="image">Image</label>
+              <input type="file" name="image" class="form-control" required>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Add Image</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<!-- Image Add Model End -->
+
+<!-- Delete Image Modal Start -->
+<div class="modal fade" id="deleteContent" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete Content</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST" enctype="multipart/form-data" id="delete_shop_form">
+        {% csrf_token %}
+        <div class="modal-body">
+          <p>Are you sure you want to delete this Content?</p>
+          <input type="hidden" name="image_id" id="content-id-input">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Delete Image Modal End -->
+<script>
+  function setContentId(ContentId) {
+    console.log(ContentId)
+    document.getElementById('content-id-input').value = ContentId;
+  }
+</script>
+  {% endblock main %}
+

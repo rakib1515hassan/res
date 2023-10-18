@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .invoice-header h1 {
+      font-size: 48px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #554c86;
+    }
+    .invoice-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .invoice-info span {
+      font-size: 18px;
+    }
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .invoice-table th, .invoice-table td {
+      padding: 10px;
+      text-align: left;
+    }
+    .invoice-table th {
+      background-color: #554c86;
+      color: #fff;
+      font-size: 18px;
+      font-weight: normal;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .invoice-table td {
+      border-bottom: 1px solid #ddd;
+    }
+    .invoice-table td.description {
+      font-size: 16px;
+      width: 60%;
+    }
+    .invoice-table td.amount {
+      font-size: 18px;
+      font-weight: bold;
+      width: 40%;
+      text-align: right;
+    }
+    .invoice-total {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    .invoice-total h3 {
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #554c86;
+      margin-left: 20px;
+    }
+    .invoice-signature {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    .invoice-signature p {
+      font-size: 18px;
+      text-align: right;
+    }
+    .invoice-signature img {
+      width: 150px;
+      height: auto;
+      margin-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="invoice-header">
+      <div>
+        <h3>Logo</h3>
+      </div>
+      <div>
+        <h1>Invoice</h1>
+        <span>Invoice #123456</span>
+      </div>
+      <div>
+        <p>Date: 2023-05-02</p>
+      </div>
+    </div>
+    <div class="invoice-info">
+      <div>
+        <h2>Billed To</h2>
+        <p>User ID: 789</p>
+      </div>
+      <div>
+        <h2>Invoice Details</h2>
+        <p>Subscription ID: 567</p>
+        <p>Period Start Date: 2023-04-01</p>
+        <p>Period End Date: 2023-04-30</p>
+        <p>Description: Monthly Subscription</p>
+      </div>
+    </div>
+    <div class="invoice-table-container">
+        <table class="invoice-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="description">Monthly Subscription</td>
+              <td class="amount">$99.99</td>
+            </tr>
+            <tr>
+              <td class="description">Tax (10%)</td>
+              <td class="amount">$9.99</td>
+            </tr>
+            <tr>
+              <td class="description">Discount</td>
+              <td class="amount">-$10.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="invoice-total">
+        <h3>Total: $99.98</h3>
+      </div>
+      
+      <div class="invoice-signature">
+        <div>
+          <p>Authorized Signature:</p>
+          <img src="signature.png" alt="Authorized Signature">
+        </div>
+      </div>
+      
+  </div>
+
+</body>
+</html> 
+

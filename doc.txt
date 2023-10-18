@@ -1,0 +1,44 @@
+
+1. Download Python version(3.10.6+)
+2. Install pip
+3. Install virtaulenv using commnad 
+    pip install virtaulenv
+4. Active Virtaulenv using `source venv/bin/activate` this commnad
+5. Run 'pip install -r requirements.txt`
+6. Run 'python3 manage.py makemigrations`
+6. Run 'python3 manage.py migrate`
+7. Create a superuser using 'python3 manage.py createsuperuser`
+
+
+Add Google Map API key
+===================
+templates/dashboard.html  line number 3
+templates/dashboard.html  line number 76
+
+templates/edit_shop.html  line number 23
+
+templates/shop_view.html  line number 4
+templates/shop_view.html  line number 302
+
+templates/shop.html  line number 134
+
+
+Strip Payment Option
+====================
+res1200/settings.py
+
+add strip key
+STRIPE_PUBLISHABLE_KEY
+STRIPE_SECRET_KEY
+STRIPE_ENDPOINT_SECRET
+
+
+
+
+
+
+
+    
+
+
+

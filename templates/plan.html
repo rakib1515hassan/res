@@ -1,0 +1,35 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+	<section id="pricing" class="pricing-content section-padding">
+        <div class="container">					
+            <div class="section-title text-center mt-3">
+                <h2>Membership Plans</h2>
+            </div>				
+            <div class="row text-center">	
+                {% for plan in plans %}								
+                <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0" style="visibility: visible; animation-duration: 1s; animation-delay: 0.1s; animation-name: fadeInUp;">
+                    <div class="pricing_design">
+                        <div class="single-pricing">
+                            <div class="price-head">		
+                                <h2>{{ plan.name }}</h2>
+                                <h1>${{plan.price}}</h1>
+                                <span>{{plan.time_of_membership}}</span>
+                            </div>
+                            <ul>
+                                <li>{{plan.description}}</li>
+                            </ul>
+                            <div class="pricing-price">
+                                
+                            </div>
+                            <a href="#" style="text-decoration: none;" class="price_btn">Buy Now</a>
+                        </div>
+                    </div>
+                </div><!--- END COL -->	
+                {% endfor %}		  
+            </div><!--- END ROW -->
+        </div><!--- END CONTAINER -->
+    </section>
+
+{% endblock %}

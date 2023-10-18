@@ -1,0 +1,257 @@
+{% extends 'base2.html' %}
+
+{% block plan_active %} active {% endblock plan_active %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+{% block style %}
+    <style>
+    .dataTables_wrapper .dataTables_paginate .pagination {
+  justify-content: flex-end;
+}
+     .dataTables_wrapper .dataTables_filter {
+    text-align: right;
+    margin-bottom: 10px;
+  }
+     </style>
+{% endblock style %}
+{% block main %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="row">
+    
+    {% if user %}
+    {% comment %} <div class="col-md-12">
+          <div class="header">
+            <h1>{{user.get_full_name}}</h1>
+            <h3>{{user.location}}</h3>
+            <p>{{user.description | slice:"0:50"}}</p>
+          </div>
+    </div> {% endcomment %}
+    {% endif %}
+  </div>
+    <div class="row">
+    <div class="col-md-12 mx-auto mt-5">
+
+      <div class="table-responsive mt-3">
+        <table class="table table-striped table-sm" id="shop-list">
+          <thead>
+            <tr>
+              <th scope="col">Sl</th>
+              <th scope="col">Shop Name</th>
+              <th scope="col">View</th>
+              <th scope="col">Update</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+    
+            {% for shop in shops %}    
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{shop.name}}</td>
+              <td><a href="{% url 'coreapp:view_shop' shop.id %}" class="btn btn-sm btn-primary">View</a></td>
+              <td>
+                <a href="{% url 'coreapp:edit_shop' shop.id %}" class="btn btn-sm btn-warning">Update</a>
+              </td>
+              <td>
+                <button data-toggle="modal" data-target="#deleteshop" onclick="setShopId({{shop.id}})" class="btn btn-sm btn-danger">Delete</button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+   
+          <!-- Modal -->
+          {% comment %} <div class="modal fade" id="addImage" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Add Image</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form method="post" action="{% url 'coreapp:add_image' shop.id %}" enctype="multipart/form-data">
+                <div class="modal-body">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label for="category">Gallery Name</label>
+                        <select name="category" class="form-control" required>
+                          {% for category in categories %}
+                            <option value="{{category.id}}">{{category.gallery_name}}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="form-group mt-3">
+                        <label for="image_name">Image Name</label>
+                        <input type="text" name="image_name" class="form-control" required>
+                      </div>
+                      <div class="form-group mt-3">
+                        <label for="image">Image</label>
+                        <input type="file" name="image" class="form-control" required>
+                      </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Add Image</button>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div> {% endcomment %}
+    </div>
+  </div>
+  <div class="card-body mt-5">
+    <div class="row">
+      {% for cat in categories %}
+      <h2>{{cat.gallery_name}}</h2>
+        {% for img in cat.get_image %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img class="card-img-top img-fluid" style="height:300px" src="{{img.image.url}}" alt="{{img.image.name}}">
+        </div>
+        <button data-toggle="modal" data-target="#deleteImage" onclick="ImageId({{img.id}})" class="btn btn-sm btn-danger mt-2">Delete</button>
+        <button data-toggle="modal" data-target="#editImage-{{forloop.counter}}" onclick="edit({{img.id}})" class="btn btn-sm btn-warning mt-2">Edit</button>
+      </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</main>
+
+
+
+{% comment %} Shop delete modal  {% endcomment %}
+<div class="modal fade" id="deleteGallary" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete Gallery</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="post" enctype="multipart/form-data" id="delete_gallary_form">
+        {% csrf_token %}
+        <div class="modal-body">
+          <p>Are you sure you want to delete this Gallery?</p>
+          <input type="hidden" name="img_id" id="shop_id_input">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button name="delete_gallary_form" type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--------- Delete Image Start------------>
+<div class="modal fade" id="deleteImage" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete Image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="post" enctype="multipart/form-data" id="delete_img_form">
+        {% csrf_token %}
+        <div class="modal-body">
+          <p>Are you sure you want to delete this Image?</p>
+          <input type="hidden" name="image_id" id="img_id_input">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button name="delete_img_form" type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!------------ Delete Image End------------>
+
+<!--------- Edit Image Start------------>
+{% for cat in categories %}
+  {% for img in cat.get_image %}
+    <div class="modal fade" id="editImage-{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Edit Image</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form method="post" enctype="multipart/form-data" id="edit_img_form">
+            {% csrf_token %}
+            <div class="modal-body">
+
+              <label for="image">Image</label>
+              <div class="form-group mt-3">
+                {% if img.image %}
+                  <img src="{{img.image.url}}" alt="" width="80px" height="80px" style="border-radius: 100%;">
+                  <p class="mt-2 mb-2" style="font-size:14px;">{{img.name}}</p>
+                {% endif %}
+                <input type="file" name="new_image" class="form-control">
+              </div>
+
+              <input type="hidden" name="image_e_id" value="{{img.id}}">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button name="edit_img_form" type="submit" class="btn btn-primary">Update</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+{% endfor %}
+<!------------ Edit Image End------------>
+
+{% comment %} Shop delete modal  {% endcomment %}
+<div class="modal fade" id="deleteshop" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete Shop</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="get" action="{% url 'coreapp:delete_shop' %}" enctype="multipart/form-data" id="delete_shop_form">
+        {% csrf_token %}
+        <div class="modal-body">
+          <p>Are you sure you want to delete this shop?</p>
+          <input type="hidden" name="shop_id" id="shop-id-input">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button name="delete_shop_form" type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+   $('#shop-list').DataTable({
+     "ordering": true,
+ });
+  function setShopId(shopId) {
+    document.getElementById('shop_id_input').value = shopId;
+    document.getElementById('shop-id-input').value = shopId;
+  }
+  function ImageId(shopId) {
+    document.getElementById('img_id_input').value = shopId;
+  }
+  </script>
+
+
+{% endblock %}
